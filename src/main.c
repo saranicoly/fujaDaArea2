@@ -30,13 +30,13 @@ int main(void){
 
     Aseprite huguin = LoadAseprite("assets/huguin/huguin_andando.aseprite");
 
-    /*AsepriteTag standing[4] = {
-        LoadAsepriteTag(huguin, "cima"),
-        LoadAsepriteTag(huguin, "direita"),
-        LoadAsepriteTag(huguin, "baixo"),
-        LoadAsepriteTag(huguin, "esquerda")
+    AsepriteTag standing[4] = {
+        LoadAsepriteTag(huguin, "paradoCima"),
+        LoadAsepriteTag(huguin, "paradoDireita"),
+        LoadAsepriteTag(huguin, "paradoBaixo"),
+        LoadAsepriteTag(huguin, "paradoEsquerda")
     };
-    */
+    
     AsepriteTag moving[4] = {
         LoadAsepriteTag(huguin, "andarCima"),
         LoadAsepriteTag(huguin,"andarDireita"),
@@ -45,10 +45,10 @@ int main(void){
    };
 
     int direction = 2;
-   const float scale = 4;
+    const float scale = 1;
     Vector2 playerPosition = {
         GetScreenWidth() / 4  - GetAsepriteWidth(huguin) / 4 * scale,
-        GetScreenHeight() / 8  - GetAsepriteHeight(huguin) / 8 * scale
+        GetScreenHeight() /   - GetAsepriteHeight(huguin) / 8 * scale
     };
 
     const float speed = 2;
@@ -120,9 +120,9 @@ int main(void){
             if (playerMoving) {
                 DrawAsepriteTagEx(moving[direction], playerPosition, 0, scale, WHITE);
             }
-            //else {
-              //  DrawAsepriteTagEx(standing[direction], playerPosition, 0, scale, WHITE);
-            //}   
+            else {
+                DrawAsepriteTagEx(standing[direction], playerPosition, 0, scale, WHITE);
+            }   
 
             
 

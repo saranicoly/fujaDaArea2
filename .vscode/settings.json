@@ -1,0 +1,6 @@
+{
+  "files.associations": {
+    "raylib-aseprite.h": "c",
+    "raylib.h": "c"
+  }
+}

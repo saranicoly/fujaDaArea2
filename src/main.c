@@ -212,8 +212,8 @@ int main(void){
             if (room_number==1){
                 ClearBackground(RAYWHITE);
                 DrawAseprite(room1, 0, 0, 0, WHITE);
-
                 show_huguin(playerMoving, moving, standing, direction, playerPosition, scale);
+                DrawText("\n\nVOCÊ SÓ TEM UMA VIDA\n   CUIDE BEM DELA!", screenWidth - 520, screenHeight - 738, 21, BLACK);
                 
                 if(playerPosition.x>=340&&playerPosition.x<=400&&playerPosition.y<=96){
                     room_number=2;
@@ -274,9 +274,9 @@ int main(void){
              else if (room_number==5){
                 ClearBackground(RAYWHITE);
                 DrawAseprite(room5, 0, 0, 0, WHITE);
-                DrawText("Meu deus! você conseguiu escapar da Area II\nSão poucos os que conseguem", screenWidth - 760, screenHeight - 290, 32, BLACK);
+                DrawText("Meu deus! você conseguiu escapar da Área II\nSão poucos os que conseguem", screenWidth - 760, screenHeight - 290, 32, BLACK);
 
-                DrawText("aperte 'espaco' para passar", screenWidth - 300, screenHeight - 120, 19, DARKGRAY);
+                DrawText("aperte 'espaço' para passar", screenWidth - 300, screenHeight - 120, 19, DARKGRAY);
                     if(IsKeyPressed(KEY_SPACE)){
                         room_number=6;
                     }
@@ -285,8 +285,8 @@ int main(void){
             else if (room_number==6){
                 ClearBackground(RAYWHITE);
                 DrawAseprite(room6, 0, 0, 0, WHITE);
-                DrawText("Mas nao vem ao caso, que bom \nque voce conseguiu!\nEscapar desse lugar nao\n eh tarefa facil", screenWidth - 750, screenHeight - 290, 35, BLACK);
-                DrawText("aperte 'espaco' para passar", screenWidth - 300, screenHeight - 120, 19, DARKGRAY);
+                DrawText("Mas não vem ao caso, que bom \nque você conseguiu!\nEscapar desse lugar não\n é tarefa fácil", screenWidth - 750, screenHeight - 290, 35, BLACK);
+                DrawText("aperte 'espaço' para passar", screenWidth - 300, screenHeight - 120, 19, DARKGRAY);
                 
                     if(IsKeyPressed(KEY_SPACE)){
                         room_number=7;
@@ -296,8 +296,8 @@ int main(void){
             else if (room_number==7){
                 ClearBackground(RAYWHITE);
                 DrawAseprite(room7, 0, 0, 0, WHITE);
-                DrawText("Vamos meu aluno, me acompanhe\nVamos voltar para o CIn!", screenWidth - 700, screenHeight - 290, 40, BLACK);
-                DrawText("aperte 'espaco' para finalizar", screenWidth - 300, screenHeight - 120, 19, DARKGRAY);
+                DrawText("Vamos meu aluno, me acompanhe!\nVamos voltar para o CIn!", screenWidth - 700, screenHeight - 290, 40, BLACK);
+                DrawText("aperte 'espaço' para finalizar", screenWidth - 300, screenHeight - 120, 19, DARKGRAY);
                     if(IsKeyPressed(KEY_SPACE)){
                         CloseWindow();
                     }

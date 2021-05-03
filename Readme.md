@@ -10,8 +10,8 @@
         - `make PLATFORM=PLATFORM_DESKTOP RAYLIB_LIBTYPE=SHARED`
         - `sudo make install RAYLIB_LIBTYPE=SHARED`
     - Rodando o jogo
-        - `git clone https://github.com/gbrls/exemplo-raylib`
-        - `cd exemplo-raylib`
+        - `git clone https://github.com/saranicoly/fujaDaArea2`
+        - `cd fujaDaArea2`
         - `make`
 - Windows:
    - Prerequisitos
@@ -19,7 +19,7 @@
     - Intalando o raylib
         - Fazer download do instalador da [biblioteca](https://raysan5.itch.io/raylib/purchase?popup=1) (baixe o do MINGW) e faça a instalação completa, incluindo o notepad++.
     - Rodando o jogo
-        - `git clone https://github.com/gbrls/exemplo-raylib`
+        - `git clone https://github.com/saranicoly/fujaDaArea2`
         - Abra o notepad++ contido na pasta de instalação do raylib (C://raylib/npp/notepad++.exe)
         - Clique em file, em seguida abra a pasta de exemplo baixada e, por ultimo, abra o arquivo main.c contido na pasta src.
         - Tecle F6, clique na caixa de opções da janela no canto inferior esquerdo, em seguida em `temporary script`. Copie e cole o seguinte código  

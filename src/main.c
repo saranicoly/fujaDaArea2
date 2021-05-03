@@ -1,20 +1,7 @@
 #include "raylib.h"
-#include <time.h>
 
 #define RAYLIB_ASEPRITE_IMPLEMENTATION
 #include "raylib-aseprite.h"
-
-void delay(int number_of_seconds)
-{
-    // Converting time into milli_seconds
-    int milli_seconds = 1000 * number_of_seconds;
-  
-    // Storing start time
-    clock_t start_time = clock();
-  
-    // looping till required time is not achieved
-    while (clock() < start_time + milli_seconds);
-}
 
 void show_huguin(bool playerMoving, AsepriteTag *moving, AsepriteTag *standing, int direction, Vector2 playerPosition, float scale){
     if (playerMoving) {
@@ -34,28 +21,39 @@ void show_boss(bool bossMoving, AsepriteTag *movingBoss, AsepriteTag *standingBo
     }
 }
 
+int test_colision_boss(Vector2 playerPosition, Vector2 bossPosition){
+    // return 0; //descomentar essa linha e comentar a condicional, caso queira desativar a colisão
+    if ((playerPosition.x - bossPosition.x) <=1 && (playerPosition.y - bossPosition.y) <= 1){
+        return 1;
+    }
+    else{
+        return 0;
+    }
+}
+
 int main(void){
 
     const int screenWidth = 800;
     const int screenHeight = 850;
     SetTargetFPS(60);
-    // Vector2 mousePoint = { 0.0f, 0.0f };
     
     InitWindow(screenWidth, screenHeight, "Fuja da Area II");
     InitAudioDevice();
 
     Music music = LoadMusicStream("./assets/horror_song.mp3");
     PlayMusicStream(music);
-    SetMasterVolume(0.2f);
+    SetMasterVolume(0.1f);
 
-    Texture2D texture = LoadTexture("./assets/sprites/comeco.png");
+    Aseprite comeco = LoadAseprite("./assets/sprites/comeco.aseprite");
     Aseprite room1 = LoadAseprite("./assets/sprites/room1.aseprite");
     Aseprite room2 = LoadAseprite("./assets/sprites/room2.aseprite");
     Aseprite room3 = LoadAseprite("./assets/sprites/room3.aseprite");
-    // Aseprite room4 = LoadAseprite("./assets/sprites/room4.aseprite");
-    // Aseprite room5 = LoadAseprite("./assets/sprites/room5.aseprite");
-    // Aseprite room6 = LoadAseprite("./assets/sprites/room6.aseprite");
-    // Aseprite room7 = LoadAseprite("./assets/sprites/room4.aseprite");
+    Aseprite room4 = LoadAseprite("./assets/sprites/room4.aseprite");
+    Aseprite room5 = LoadAseprite("./assets/sprites/acm1.aseprite");
+    Aseprite room6 = LoadAseprite("./assets/sprites/acm2.aseprite");
+    Aseprite room7 = LoadAseprite("./assets/sprites/acm3.aseprite");
+
+    Aseprite room8 = LoadAseprite("./assets/sprites/game_over.aseprite");
 
     Aseprite huguin = LoadAseprite("assets/huguin/huguin_andando.aseprite");
     Aseprite boss = LoadAseprite("assets/huguin/mob_andando.aseprite");
@@ -91,6 +89,7 @@ int main(void){
     int direction = 2;
     int directionBoss = 1;
     const float scale = 1;
+    int colision = 0;
     Vector2 playerPosition = {
         GetScreenWidth() / 5  - GetAsepriteWidth(huguin) / 5 * scale,
         GetScreenHeight() / 1.5   - GetAsepriteHeight(huguin) / 1.5 * scale
@@ -102,23 +101,15 @@ int main(void){
     };
 
     const float speed = 2;
-    const float speedBoss = 1.3;
+    const float speedBoss = 1.1;
 
     bool playerMoving;
-    bool bossMoving;
-    //int limt_top = 40;
-    
+    bool bossMoving;    
 
     int room_number = 0;
-    // Aseprite room = LoadAseprite("assets/sprites/comeco.aseprite");
 
     // Main game loop
-    
     while (!WindowShouldClose()){  // Detect window close button or ESC key
-        
-        if(IsMouseButtonReleased(MOUSE_LEFT_BUTTON)){
-            room_number = 1;
-        }
 
         if(IsKeyDown(KEY_W)){
             direction = 0;
@@ -163,26 +154,22 @@ int main(void){
             UpdateAsepriteTag(&moving[direction]);
         }
 
-        //movimentação do boss
+        //andar boss
         if (bossPosition.y !=  playerPosition.y || bossPosition.x !=  playerPosition.x) {
             if(bossPosition.y < playerPosition.y){
                 bossPosition.y += (speedBoss);
-                //direction = 2;
                 directionBoss = 2;
             }
             if(bossPosition.x > playerPosition.x){
                 bossPosition.x -= (speedBoss);
-                //direction = 3;
                 directionBoss = 3;
             }
             if(bossPosition.y > playerPosition.y){
                 bossPosition.y -= (speedBoss);
-                //direction = 0;
                 directionBoss = 0;
             }
             if(bossPosition.x < playerPosition.x){
                 bossPosition.x +=  speedBoss;
-                //direction = 1;
                 directionBoss = 1;
             }
             
@@ -191,24 +178,37 @@ int main(void){
         }
 
         BeginDrawing();
-            ClearBackground(RAYWHITE);
+
             UpdateMusicStream(music);
-            DrawTexture(texture, screenWidth/2 - texture.width/2, screenHeight/2 - texture.height/2, WHITE);
+            if(room_number==0){
+                ClearBackground(RAYWHITE);
+                DrawAseprite(comeco, 0, 0, 0, WHITE);
+                DrawText("APERTE ESPAÇO E COMECE", screenWidth - 700, screenHeight - 315, 40, RED);
+                DrawText("\n\nUSE 'W' 'A' 'S' 'D' PARA SE MOVIMENTAR", screenWidth - 750, screenHeight - 315, 34, RED);
+                if(IsKeyPressed(KEY_SPACE)){
+                    room_number=1;
+                }
+            }
             
-            //limitação de movimentção
+            //paredes laterais
+            //esquerda
             if(playerPosition.x <= 133){
                 playerPosition.x = 133;
             }
+            //cima
             if(playerPosition.y <= 50){
                 playerPosition.y = 50;
             }
+            //direita
             if(playerPosition.x >= 600){
                 playerPosition.x = 600;
             }
+            //baixo
             if(playerPosition.y >= 570){
                 playerPosition.y = 570;
             }
 
+            //troca de salas
             if (room_number==1){
                 ClearBackground(RAYWHITE);
                 DrawAseprite(room1, 0, 0, 0, WHITE);
@@ -220,10 +220,6 @@ int main(void){
                     playerPosition.x=192;
                     playerPosition.y=610;
                 }
-                
-                // if(IsMouseButtonReleased(MOUSE_LEFT_BUTTON)){
-                //     room_number = 2;
-                // }
             }
             
             else if (room_number==2){
@@ -231,57 +227,97 @@ int main(void){
                 DrawAseprite(room2, 0, 0, 0, WHITE);
                 show_huguin(playerMoving, moving, standing, direction, playerPosition, scale);
                 show_boss(bossMoving, movingBoss, standingBoss, directionBoss, bossPosition, scale);
-                if(playerPosition.x>=340&&playerPosition.x<=400&&playerPosition.y<=96){
-                    room_number=2;
+                
+                colision = test_colision_boss(playerPosition, bossPosition);
+                if (colision==1){
+                    room_number = 8;
+                }
+                if(playerPosition.x>=340&&playerPosition.x<=400&&playerPosition.y<=140){
+                    room_number=3;
                     playerPosition.x=192;
                     playerPosition.y=610;
                 }
             }
-            // 
-
             else if (room_number==3){
                 ClearBackground(RAYWHITE);
                 DrawAseprite(room3, 0, 0, 0, WHITE);
-
                 show_huguin(playerMoving, moving, standing, direction, playerPosition, scale);
-                // if((playerPosition.x>=317||playerPosition.x<=472)&&playerPosition.y==150){
-                //     room_number=3;
-                //     playerPosition.x=192;
-                //     playerPosition.y=610;
-                // }
-                // playerPosition.x=192;
-                // playerPosition.y=610;
-                // delay(500);
                 show_boss(bossMoving, movingBoss, standingBoss, directionBoss, bossPosition, scale);
-                    
+
+                if(playerPosition.x>=340&&playerPosition.x<=400&&playerPosition.y<=140){
+                 room_number=4;
+                     playerPosition.x=192;
+                        playerPosition.y=610;
+                     }
+            }
+            else if (room_number==4){
+                ClearBackground(RAYWHITE);
+                DrawAseprite(room4, 0, 0, 0, WHITE);
+                show_huguin(playerMoving, moving, standing, direction, playerPosition, scale);
+                show_boss(bossMoving, movingBoss, standingBoss, directionBoss, bossPosition, scale);
+
+                if(playerPosition.x>=340&&playerPosition.x<=400&&playerPosition.y<=140){
+                    room_number=5;
+                    playerPosition.x=192;
+                    playerPosition.y=610;
+                }
                 
-                if(IsMouseButtonReleased(MOUSE_LEFT_BUTTON)){
-                     room_number = 2;
+            }
+            else if (room_number==8){
+                ClearBackground(RAYWHITE);
+                DrawAseprite(room8, 0, 0, 0, WHITE);
+                if(IsKeyPressed(KEY_SPACE)){
+                    room_number=1;
                 }
 
             }
-                
-            
-            
-            /*
-            //534 x 534  133c 133b x 183e 183d
+             else if (room_number==5){
+                ClearBackground(RAYWHITE);
+                DrawAseprite(room5, 0, 0, 0, WHITE);
+                DrawText("Meu deus! você conseguiu escapar da Area II\nSão poucos os que conseguem", screenWidth - 760, screenHeight - 290, 32, BLACK);
 
-            Rectangle placa=DrawRectangle(int posX, int posY, int width, int height, BLANCK); //mensagem da placa
-            if (CheckCollisionRecs("aseprite do huguinho", placa)){
-               VER O TEXTO QUE VAI APARECER
-            }   
-            */
+                DrawText("aperte 'espaco' para passar", screenWidth - 300, screenHeight - 120, 19, DARKGRAY);
+                    if(IsKeyPressed(KEY_SPACE)){
+                        room_number=6;
+                    }
+             }
             
+            else if (room_number==6){
+                ClearBackground(RAYWHITE);
+                DrawAseprite(room6, 0, 0, 0, WHITE);
+                DrawText("Mas nao vem ao caso, que bom \nque voce conseguiu!\nEscapar desse lugar nao\n eh tarefa facil", screenWidth - 750, screenHeight - 290, 35, BLACK);
+                DrawText("aperte 'espaco' para passar", screenWidth - 300, screenHeight - 120, 19, DARKGRAY);
+                
+                    if(IsKeyPressed(KEY_SPACE)){
+                        room_number=7;
+                    }
+            }
+
+            else if (room_number==7){
+                ClearBackground(RAYWHITE);
+                DrawAseprite(room7, 0, 0, 0, WHITE);
+                DrawText("Vamos meu aluno, me acompanhe\nVamos voltar para o CIn!", screenWidth - 700, screenHeight - 290, 40, BLACK);
+                DrawText("aperte 'espaco' para finalizar", screenWidth - 300, screenHeight - 120, 19, DARKGRAY);
+                    if(IsKeyPressed(KEY_SPACE)){
+                        CloseWindow();
+                    }
+            }
+
         EndDrawing();
     }
     
     UnloadAseprite(room1);
     UnloadAseprite(room2);
     UnloadAseprite(room3);
+    UnloadAseprite(room4);
+    UnloadAseprite(room5);
+    UnloadAseprite(room6);
+    UnloadAseprite(room7);
+    UnloadAseprite(room8);
     UnloadAseprite(huguin);
     UnloadAseprite(boss);
 
     CloseAudioDevice();
     CloseWindow();
-    // return 0;
+    return 0;
 }
